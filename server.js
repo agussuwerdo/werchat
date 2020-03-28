@@ -7,9 +7,9 @@ const firebase = require('firebase')
 const uuid = require('uuid/v1')
 const formatMessage = require('./public/utils/messages')
 const { userJoin, getCurrentUser, userLeave, getRoomUsers } = require('./public/utils/users')
-const useHTTPS = true
+const useHTTPS = false
 const botName = 'WerChat Bot'
-
+var server = null
 PORT = 3000 || process.env.PORT
 //set express app and socket io
 const app = express()
@@ -18,9 +18,9 @@ if (useHTTPS) {
 	const privateKey = fs.readFileSync('/etc/letsencrypt/live/werdev.com/privkey.pem', 'utf8')
 	const certificate = fs.readFileSync('/etc/letsencrypt/live/werdev.com/cert.pem', 'utf8')
 	const credentials = { key: privateKey, cert: certificate }
-	const server = https.createServer(credentials, app)
+	server = https.createServer(credentials, app)
 } else {
-	const server = http.createServer(app)
+	server = http.createServer(app)
 }
 const io = socketio(server)
 
