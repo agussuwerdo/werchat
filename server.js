@@ -7,10 +7,10 @@ const firebase = require('firebase')
 const uuid = require('uuid/v1')
 const formatMessage = require('./public/utils/messages')
 const { userJoin, getCurrentUser, userLeave, getRoomUsers } = require('./public/utils/users')
-const useHTTPS = false
+const useHTTPS = true
 const botName = 'WerChat Bot'
 var server = null
-PORT = 3000 || process.env.PORT
+PORT = 4443 || process.env.PORT
 //set express app and socket io
 const app = express()
 if (useHTTPS) {
