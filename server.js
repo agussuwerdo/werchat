@@ -80,7 +80,7 @@ io.sockets.on('connection', function (socket) {
 		socket.join(user.room)
 
 		// Welcome current user
-		socket.emit('message', formatMessage(uuid(), botName, 'Welcome to ChatCord!'))
+		socket.emit('message', formatMessage(uuid(), botName, 'Welcome to !' + botName))
 
 		// Broadcast when a user connects
 		socket.broadcast
