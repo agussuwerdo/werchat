@@ -9,6 +9,7 @@ const formatMessage = require('./public/utils/messages')
 const { userJoin, getCurrentUser, userLeave, getRoomUsers } = require('./public/utils/users')
 const useHTTPS = true
 const botName = 'WerChat Bot'
+const appName = 'WerChat'
 var server = null
 PORT = 4443 || process.env.PORT
 //set express app and socket io
@@ -80,7 +81,7 @@ io.sockets.on('connection', function (socket) {
 		socket.join(user.room)
 
 		// Welcome current user
-		socket.emit('message', formatMessage(uuid(), botName, 'Welcome to !' + botName))
+		socket.emit('message', formatMessage(uuid(), botName, 'Welcome to ' + appName + '!'))
 
 		// Broadcast when a user connects
 		socket.broadcast
