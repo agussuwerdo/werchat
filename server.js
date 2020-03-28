@@ -1,19 +1,27 @@
 const express = require('express')
 const http = require('http')
+const https = require('https')
 const path = require('path')
 const socketio = require('socket.io')
 const firebase = require('firebase')
 const uuid = require('uuid/v1')
 const formatMessage = require('./public/utils/messages')
 const { userJoin, getCurrentUser, userLeave, getRoomUsers } = require('./public/utils/users')
-
-const botName = 'WerChat Bot';
+const useHTTPS = true
+const botName = 'WerChat Bot'
 
 PORT = 3000 || process.env.PORT
-
 //set express app and socket io
 const app = express()
-const server = http.createServer(app)
+if (useHTTPS) {
+	const fs = require('fs')
+	const privateKey = fs.readFileSync('/etc/letsencrypt/live/werdev.com/privkey.pem', 'utf8')
+	const certificate = fs.readFileSync('/etc/letsencrypt/live/werdev.com/cert.pem', 'utf8')
+	const credentials = { key: privateKey, cert: certificate }
+	const server = https.createServer(credentials, app)
+} else {
+	const server = http.createServer(app)
+}
 const io = socketio(server)
 
 //set static folder
@@ -67,12 +75,12 @@ app.post('/deleteMessage', function (req, res) {
 io.sockets.on('connection', function (socket) {
 
 	socket.on('joinRoom', ({ username, room }) => {
-		const user = userJoin(socket.id, username, room);
+		const user = userJoin(socket.id, username, room)
 
-		socket.join(user.room);
+		socket.join(user.room)
 
 		// Welcome current user
-		socket.emit('message', formatMessage(uuid(), botName, 'Welcome to ChatCord!'));
+		socket.emit('message', formatMessage(uuid(), botName, 'Welcome to ChatCord!'))
 
 		// Broadcast when a user connects
 		socket.broadcast
@@ -80,43 +88,43 @@ io.sockets.on('connection', function (socket) {
 			.emit(
 				'message',
 				formatMessage(uuid(), botName, `${user.username} has joined the chat`)
-			);
+			)
 
 		// Send users and room info
 		io.to(user.room).emit('roomUsers', {
 			room: user.room,
 			users: getRoomUsers(user.room)
-		});
-	});
+		})
+	})
 
 	// Listen for chatMessage
 	socket.on('chatMessage', msg => {
 		const message_id = uuid()
-		const user = getCurrentUser(socket.id);
+		const user = getCurrentUser(socket.id)
 		const message = formatMessage(message_id, user.username, msg)
 
 		firebase.database().ref('messages/' + message_id).set(message)
 
-		io.to(user.room).emit('message', message);
-	});
+		io.to(user.room).emit('message', message)
+	})
 
 	// Runs when client disconnects
 	socket.on('disconnect', () => {
-		const user = userLeave(socket.id);
+		const user = userLeave(socket.id)
 
 		if (user) {
 			io.to(user.room).emit(
 				'message',
 				formatMessage(uuid(), botName, `${user.username} has left the chat`)
-			);
+			)
 
 			// Send users and room info
 			io.to(user.room).emit('roomUsers', {
 				room: user.room,
 				users: getRoomUsers(user.room)
-			});
+			})
 		}
-	});
+	})
 })
 
 server.listen(PORT, function () {
