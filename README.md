@@ -1,6 +1,4 @@
-# Demo front end get push notification via FCM
-The file is already configured with FCM key.
-
+# socket.io chatting application
 
 # Run the demo
 Install NodeJS & NPM first.
