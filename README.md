@@ -1,16 +1,17 @@
 # socket.io chatting application
+Simple chatting application menggunakan Socket io dan firebase (auth)
 
-# Run the demo
-Install NodeJS & NPM first.
+# Installation
+Install NodeJS & NPM.
 ```shell
 npm install
 ```
-Run Service
+Jalankan Service
 ```shell
 node server.js
 ```
-open [http://localhost:4443/](http://localhost:4443/)
-then login with phone number or google account
+Buka pada browser [http://localhost:4443/](http://localhost:4443/)
+login dengan nomor handphone atau google account
 
 ### Author
 
